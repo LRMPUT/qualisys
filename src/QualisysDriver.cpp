@@ -19,6 +19,8 @@ bool QualisysDriver::init() {
   nh.param("server_address", server_address, string("192.168.254.1"));
   nh.param("server_base_port", base_port, 22222);
   nh.param("publish_tf", publish_tf, false);
+  nh.param("publish_pose", publish_pose, false);
+  nh.param("publish_subject", publish_subject, false);
 
   // Connecting to the server
   ROS_INFO_STREAM("Connecting to the Qualisys Motion Tracking system specified at: "
@@ -62,17 +64,21 @@ void QualisysDriver::checkPublishers(const int& body_count) {
     // Create a publisher for the rigid body
     // if it does not have one.
     if (subject_publishers.find(name) ==
-          subject_publishers.end())
+          subject_publishers.end()){
       subject_publishers[name] =
-        nh.advertise<qualisys::Subject>(name, 10);
-
+        nh.advertise<qualisys::Subject>(name + "_subject", 10);
+      pose_publishers[name] =
+                nh.advertise<geometry_msgs::PoseStamped>(name + "_pose", 10);
+    }
     subject_indicator[name] = true;
   }
 
   for (auto it = subject_indicator.begin();
       it != subject_indicator.end(); ++it) {
-    if (it->second == false)
+    if (it->second == false) {
       subject_publishers.erase(it->first);
+      pose_publishers.erase(it->first);
+    }
   }
 
   return;
@@ -136,7 +142,24 @@ void QualisysDriver::handlePacketData(CRTPacket* prt_packet) {
         geom_stamped_transform.transform.translation.z;
     subject_msg.orientation =
         geom_stamped_transform.transform.rotation;
-    subject_publishers[subject_name].publish(subject_msg);
+    if (publish_subject)
+      subject_publishers[subject_name].publish(subject_msg);
+
+    // Send poseStamped
+    geometry_msgs::PoseStamped geom_pose_stamped;
+
+    geom_pose_stamped.header = geom_stamped_transform.header;
+    geom_pose_stamped.pose.position.x =
+        geom_stamped_transform.transform.translation.x;
+    geom_pose_stamped.pose.position.y =
+        geom_stamped_transform.transform.translation.y;
+    geom_pose_stamped.pose.position.z =
+        geom_stamped_transform.transform.translation.z;
+    geom_pose_stamped.pose.orientation =
+        geom_stamped_transform.transform.rotation;
+    if (publish_pose)
+      pose_publishers[subject_name].publish(geom_pose_stamped);
+
   }
 
   return;

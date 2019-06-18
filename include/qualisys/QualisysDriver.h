@@ -77,10 +77,13 @@ class QualisysDriver{
 
     // Publishers
     std::map<std::string, ros::Publisher> subject_publishers;
+    std::map<std::string, ros::Publisher> pose_publishers;
     tf::TransformBroadcaster tf_publisher;
 
     // If publish tf msgs
     bool publish_tf;
+    bool publish_pose;
+    bool publish_subject;
 
 
 };
