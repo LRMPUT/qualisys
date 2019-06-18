@@ -47,9 +47,9 @@ message("EIGEN3_INCLUDE_DIR: " ${EIGEN3_INCLUDE_DIR})
 add_library(qualisys_driver
   src/QualisysDriver.cpp
   include/qualisys/RTProtocol.cpp
-  include/qualisys/NBC_Markup.cpp
   include/qualisys/RTPacket.cpp
   include/qualisys/Network.cpp
+  include/qualisys/Markup.cpp
 )
 target_link_libraries(qualisys_driver
   ${catkin_LIBRARIES}
