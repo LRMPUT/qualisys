@@ -133,6 +133,7 @@ void QualisysDriver::handlePacketData(CRTPacket* prt_packet) {
     qualisys::Subject subject_msg;
     subject_msg.header =
       geom_stamped_transform.header;
+    subject_msg.timestamp = prt_packet->GetTimeStamp();
     subject_msg.name = subject_name;
     subject_msg.position.x =
         geom_stamped_transform.transform.translation.x;

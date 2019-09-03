@@ -1,4 +1,5 @@
 Header header
+uint64 timestamp
 string name
 bool occluded
 geometry_msgs/Point position
