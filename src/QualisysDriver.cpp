@@ -89,6 +89,8 @@ void QualisysDriver::handlePacketData(CRTPacket* prt_packet) {
   // Number of rigid bodies
   int body_count = prt_packet->Get6DOFEulerBodyCount();
 
+  ROS_INFO_STREAM("body_count = " << body_count);
+
   // Check the publishers for the rigid bodies
   checkPublishers(body_count);
 
@@ -173,6 +175,7 @@ void QualisysDriver::run() {
   port_protocol.GetCurrentFrame(CRTProtocol::cComponent6dEuler);
 
   if(port_protocol.ReceiveRTPacket(e_type, true)) {
+    ROS_INFO_STREAM("Packet received");
 
     switch(e_type) {
       // Case 1 - sHeader.nType 0 indicates an error
