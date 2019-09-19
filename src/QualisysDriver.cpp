@@ -16,11 +16,11 @@ QualisysDriver::QualisysDriver(const ros::NodeHandle& n):
 bool QualisysDriver::init() {
   // The base port (as entered in QTM, TCP/IP port number, in the RT output tab
   // of the workspace options
-  nh.param("server_address", server_address, string("192.168.254.1"));
+  nh.param("server_address", server_address, string("140.93.16.160"));
   nh.param("server_base_port", base_port, 22222);
-  nh.param("publish_tf", publish_tf, false);
-  nh.param("publish_pose", publish_pose, false);
-  nh.param("publish_subject", publish_subject, false);
+  nh.param("publish_tf", publish_tf, true);
+  nh.param("publish_pose", publish_pose, true);
+  nh.param("publish_subject", publish_subject, true);
 
   // Connecting to the server
   ROS_INFO_STREAM("Connecting to the Qualisys Motion Tracking system specified at: "
